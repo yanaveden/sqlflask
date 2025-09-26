@@ -1,25 +1,31 @@
-# Импорт необходимых модулей и функций для работы БД
 from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
 
 from flask import Flask, render_template, request, redirect
 
-# Настройка базы данных
 engine = create_engine('sqlite:///blog.db')
 Base = declarative_base()
 
 class Post(Base):
-  __tablename__ = 'posts'
+    __tablename__ = 'posts'
 
-  id = Column(Integer, primary_key=True)
-  title = Column(String)
-  content = Column(Text)
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    content = Column(Text)
 
-# Создание базы данных и таблиц
+# Новый класс для комментариев
+class Comment(Base):
+    __tablename__ = 'comments'
+
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer)
+    author = Column(String)
+    content = Column(Text)
+
+
 Base.metadata.create_all(engine)
 
-# Сессия базы данных
 Session = sessionmaker(bind=engine)
 session = Session()
 
